@@ -1,0 +1,36 @@
+{
+  "name": "api-mercado",
+  "version": "1.0.0",
+  "description": "API para listagem, cadastro, edição e exclusão de itens de supermercado.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node index.js",
+    "dev": "nodemon -L index.js",
+    "swagger-autogen": "node swagger.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunosribeiroo/api-mercado.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunosribeiroo/api-mercado/issues"
+  },
+  "homepage": "https://github.com/brunosribeiroo/api-mercado#readme",
+  "dependencies": {
+    "connect-timeout": "^1.9.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.9",
+    "redis": "^3.1.2",
+    "swagger-autogen": "^2.10.0",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "jest": "^27.0.5",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
+  }
+}
