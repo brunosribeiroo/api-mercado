@@ -18,7 +18,6 @@ Baixar e instalar
 1.  ```git clone https://github.com/brunosribeiroo/api-mercado```
 2.  ```cd server```
 3.  ```npm install```
-4.  ```npm run swagger-autogen```  
 --------------------------------------------------------------------------
 ## Configurando Docker
 Execute no terminal ./server
