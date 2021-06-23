@@ -4,6 +4,8 @@ API para listagem, cadastro, edição e exclusão de itens de supermercado.
 
 Sendo desenvolvido em NodeJS com Express, banco MongoDB, Docker e Redis para serviço de cache.
 
+Testes unitários e de integração com Jest e Supertest.
+
 ## Configurando Ambientes
 
 ### Download e Instalação 
