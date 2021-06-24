@@ -1,17 +1,16 @@
-const Mongo = require('../infra/MongoConnection');
+const { ObjectId } = require('mongodb');
+const MongoRepository = require('../repository/MongoRepository');
+const CacheRepository = require('../repository/CacheRepository');
 
 class ProductDB{
 
     insertOne(product){
         return new Promise(async(resolve, reject) =>{
-            const conn = await Mongo();
             try {
-                const insert = await conn.db('supermarket').collection('products').insertOne(product);
-                const obj = {id: insert.insertedId.toString()};
-                conn.close();
-                resolve(obj);
+                const insert = await MongoRepository.insertOne('supermarket', 'products', product);
+                await CacheRepository.set(insert.id, product);
+                resolve(insert);
             } catch (error) {
-                conn.close();
                 reject('Erro ao inserir produto no DB ' + error)
             }
         })
@@ -19,13 +18,22 @@ class ProductDB{
 
     selectOne(data){
         return new Promise(async (resolve, reject) =>{
-            const conn = await Mongo();
             try {
-                const select = await conn.db('supermarket').collection('products').find(data || {}).limit(1).toArray();
-                conn.close();
-                select.length > 0 ? resolve(select[0]) : resolve(false);
+                if(data._id){
+                    const cache = await CacheRepository.get(data._id);
+                    if(cache === null){
+                        const select = await MongoRepository.selectOne('supermarket', 'products', data);
+                        select === false ? resolve(select) : await CacheRepository.set(select._id.toString(), select);
+                        resolve(select)
+                    } else {
+                        resolve(cache)
+                    }
+                } else {
+                     const select = await MongoRepository.selectOne('supermarket', 'products', data);
+                     await CacheRepository.set(select._id.toString(), select);
+                     resolve(select)
+                }
             } catch (error) {
-                conn.close();
                 reject('Erro ao pesquisar produto no DB ' + error)
             }
         })
@@ -33,13 +41,22 @@ class ProductDB{
 
     selectMany(data){
         return new Promise(async (resolve, reject) =>{
-            const conn = await Mongo();
             try {
-                const select = await conn.db('supermarket').collection('products').find(data || {}).toArray();
-                conn.close();
-                select.length > 0 ? resolve(select) : resolve(false);
+                if(!data){
+                    const cache = await CacheRepository.get('allProducts');
+                    if(cache === null){
+                        const select = await MongoRepository.selectMany('supermarket', 'products', {});
+                        select === false ? resolve(select) : await CacheRepository.set('allProducts', select);
+                        resolve(select)
+                    } else {
+                        resolve(cache);
+                    }
+                }
+                if(data){
+                    const select = await MongoRepository.selectMany('supermarket', 'products', data);
+                    resolve(select)
+                }
             } catch (error) {
-                conn.close();
                 reject('Erro ao pesquisar vários produtos no DB ' + error)
             }
         })
@@ -47,14 +64,23 @@ class ProductDB{
 
     update(filter, update){
         return new Promise(async(resolve, reject) =>{
-            const conn = await Mongo();
             try {
-                const updateDocument = {$set: update};
-                const result = await conn.db('supermarket').collection('products').update(filter, updateDocument, {multi: true});
-                conn.close();
-                resolve(result.result.nModified);
+                const result = await MongoRepository.update('supermarket', 'products', filter, update);
+                await CacheRepository.del('allProducts');
+                resolve(result);
             } catch (error) {
-                conn.close();
+                reject('Erro ao atualizar produtos no DB ' + error)
+            }
+        })
+    }
+
+    delete(id){
+        return new Promise(async(resolve, reject) =>{
+            try {
+                const result = await MongoRepository.update('supermarket', 'products', {_id: ObjectId(id)}, {deleted: true});
+                await CacheRepository.del('allProducts');
+                resolve(result);
+            } catch (error) {
                 reject('Erro ao atualizar produtos no DB ' + error)
             }
         })

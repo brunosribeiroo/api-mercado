@@ -4,6 +4,8 @@ API para listagem, cadastro, edição e exclusão de itens de supermercado.
 
 Sendo desenvolvido em NodeJS com Express, banco MongoDB, Docker e Redis para serviço de cache.
 
+Middleware de autenticação.
+
 Testes unitários e de integração com Jest e Supertest.
 
 ## Configurando Ambientes
@@ -25,7 +27,11 @@ Execute no terminal ./server
 --------------------------------------------------------------------------
 ## Testes
 Execute no terminal server_app_1 no docker
-1.  ```npm test```
+1.  ```npm test -- initTests```
+1.  ```npm test -- /test```
+
+Para testar os arquivos individualmente, execute no terminal server_app_1 no docker
+1.  ```npm test -- ${nomeDoArquivo}```
 --------------------------------------------------------------------------
 ## Documentação
 [Swagger](http://localhost:3000/doc)
