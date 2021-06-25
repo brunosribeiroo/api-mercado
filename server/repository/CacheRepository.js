@@ -35,7 +35,19 @@ class CacheRepository{
                 const del = await delAsyncRedis(key);
                 resolve(del)
             } catch (error) {
-                reject('Erro ao buscar cache no redis ' + error)
+                reject('Erro ao deletar cache no redis ' + error)
+            }
+        })
+    }
+
+    flushDB(){
+        return new Promise(async(resolve, reject) =>{
+            try {
+                const flushAsyncRedis = promisify(RedisConnection.cache().flushdb).bind(RedisConnection.cache());
+                const flush = await flushAsyncRedis();
+                resolve(true)
+            } catch (error) {
+                reject('Erro ao apagar chaves do redis ' + error)
             }
         })
     }

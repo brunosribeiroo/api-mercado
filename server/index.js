@@ -1,5 +1,7 @@
 const customExpress = require('./config/customExpress');
 const app = customExpress();
+const Container = require('./services/Container');
+
 
 const cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
@@ -13,6 +15,7 @@ if(cluster.isMaster){
 } else if(cluster.isWorker){
     
     app.listen(PORT, async () =>{
+        await Container.MongoConnection();
         console.log('Servidor Online na porta 3000')
     });
 }

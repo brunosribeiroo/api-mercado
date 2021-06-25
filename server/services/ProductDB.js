@@ -66,7 +66,7 @@ class ProductDB{
         return new Promise(async(resolve, reject) =>{
             try {
                 const result = await MongoRepository.update('supermarket', 'products', filter, update);
-                await CacheRepository.del('allProducts');
+                await CacheRepository.flushDB();
                 resolve(result);
             } catch (error) {
                 reject('Erro ao atualizar produtos no DB ' + error)
@@ -78,7 +78,7 @@ class ProductDB{
         return new Promise(async(resolve, reject) =>{
             try {
                 const result = await MongoRepository.update('supermarket', 'products', {_id: ObjectId(id)}, {deleted: true});
-                await CacheRepository.del('allProducts');
+                await CacheRepository.flushDB();
                 resolve(result);
             } catch (error) {
                 reject('Erro ao atualizar produtos no DB ' + error)
