@@ -31,9 +31,4 @@ describe('Testando funções de repository/CacheRepository', () =>{
         const result = await CacheRepository.del('testedelnaoexiste');
         expect(result).toBe(0)
     });
-
-    it('flushDB(), deleta todos os documentos do redis', async() =>{
-        const result = await CacheRepository.flushDB();
-        expect(result).toBe(true)
-    });
 })
